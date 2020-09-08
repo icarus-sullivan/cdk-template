@@ -494,7 +494,7 @@
     "@aws-cdk/core" "1.62.0"
     constructs "^3.0.4"
 
-"@aws-cdk/aws-servicediscovery@1.62.0":
+"@aws-cdk/aws-servicediscovery@1.62.0", "@aws-cdk/aws-servicediscovery@^1.62.0":
   version "1.62.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-servicediscovery/-/aws-servicediscovery-1.62.0.tgz#552cf3d637ee108295745847c1a9373ee58dfa17"
   integrity sha512-e02HMfNYnSHMQCesvvLO2WtvFjFK24ZCcpflwElPQ0/uxWYhOcRnCmwHLd8JVkxfWDe7mnZv9hiaSsVLjZSaBw==

@@ -1,10 +1,7 @@
 const express = require('express');
-const util = require('util');
 const app = express();
 
-app.get('/specific', (req, res) => {
-    res.send('Goodbye!');
-});
+app.get('/health', (req, res) => res.send('hello'));
 
 app.get('*', (req, res) => {
     res.send('Hello world!');

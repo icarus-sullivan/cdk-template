@@ -3,7 +3,6 @@ const cdk = require('@aws-cdk/core');
 const ec2 = require('@aws-cdk/aws-ec2');
 const ecs = require('@aws-cdk/aws-ecs');
 const ecsPatterns = require('@aws-cdk/aws-ecs-patterns');
-const serviceDiscovery = require('@aws-cdk/aws-servicediscovery');
 
 const path = require('path');
 
@@ -12,12 +11,13 @@ const CONFIG = {
     vpcName: 'expVpc',
     clusterName: 'expCluster',
     fargateName: 'expFargate',
-    namespaceName: 'expNsp',
-    namespaceDomain: 'your.domain.here',
-    serviceName: 'expSer',
-    serviceKey: 'explb',
 
     dockerDirectory: path.resolve(__dirname, 'docker'),
+
+    alias: {
+        recordName: 'www',
+        domainName: 'domain.here',
+    }
 }
 
 class CdkStack extends cdk.Stack {
@@ -34,22 +34,27 @@ class CdkStack extends cdk.Stack {
             },
         });
 
-        const namespace = new serviceDiscovery.PublicDnsNamespace(this, CONFIG.namespaceName, {
-            name: CONFIG.namespaceDomain,
-            vpc,
-        });
-        
-        const service = namespace.createService(CONFIG.serviceName, {
-            dnsRecordType: serviceDiscovery.DnsRecordType.A_AAAA,
-            dnsTtl: cdk.Duration.seconds(30),
-            loadBalancer: true,
+        // Create hosted zone elsewhere, may need to set up env
+        const { recordName, domainName } = CONFIG.alias;
+        const zone = route53.HostedZone.fromLookup(this, 'expZone', { 
+            domainName 
         });
 
-        service.registerLoadBalancer(CONFIG.serviceKey, fargateService.loadBalancer);
+        new route53.ARecord(this, 'exprecord', {
+            zone,
+            recordName,
+            target: route53.RecordTarget.fromAlias(new alias.LoadBalancerTarget(fargateService.loadBalancer)),
+        });
     }
 }
 
 module.exports = new CdkStack(
     new cdk.App(),
     CONFIG.name,
+    {
+        env: {
+            region: 'us-east-1',
+            account: 'your_account_id',
+        }
+    }
 );

@@ -420,7 +420,7 @@
     "@aws-cdk/core" "1.62.0"
     constructs "^3.0.4"
 
-"@aws-cdk/aws-route53-targets@1.62.0":
+"@aws-cdk/aws-route53-targets@1.62.0", "@aws-cdk/aws-route53-targets@^1.62.0":
   version "1.62.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-route53-targets/-/aws-route53-targets-1.62.0.tgz#256bd33f6cfa910fd1a3df41f38226905ea898be"
   integrity sha512-Om4TCwtFZhV0E/f0MGsKZdN3eRn6FEmNJI1pVycYxaRBiShEaPDWC209zxy6UyV5F7mG8AF9w013nXZqCgk4dg==
@@ -438,7 +438,7 @@
     "@aws-cdk/region-info" "1.62.0"
     constructs "^3.0.4"
 
-"@aws-cdk/aws-route53@1.62.0":
+"@aws-cdk/aws-route53@1.62.0", "@aws-cdk/aws-route53@^1.62.0":
   version "1.62.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-route53/-/aws-route53-1.62.0.tgz#64bc6940136d2c66e6204ab5ce92c8275c79ddca"
   integrity sha512-t3DxhlHucMb9egNHYqkrqVKsnEhcWnzmbfjK9Cik+PlHyNElqAvJsl8dZIpxVpJkCWD+XG8S6n8CpIT2LcRabA==
@@ -494,7 +494,7 @@
     "@aws-cdk/core" "1.62.0"
     constructs "^3.0.4"
 
-"@aws-cdk/aws-servicediscovery@1.62.0", "@aws-cdk/aws-servicediscovery@^1.62.0":
+"@aws-cdk/aws-servicediscovery@1.62.0":
   version "1.62.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-servicediscovery/-/aws-servicediscovery-1.62.0.tgz#552cf3d637ee108295745847c1a9373ee58dfa17"
   integrity sha512-e02HMfNYnSHMQCesvvLO2WtvFjFK24ZCcpflwElPQ0/uxWYhOcRnCmwHLd8JVkxfWDe7mnZv9hiaSsVLjZSaBw==

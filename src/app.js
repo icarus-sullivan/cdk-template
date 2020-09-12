@@ -4,7 +4,7 @@ const app = express();
 app.get('/health', (req, res) => res.send('hello'));
 
 app.get('*', (req, res) => {
-    res.send('Hello world!');
+    res.send('Connected!');
 });
 
 app.listen(3000, err => {

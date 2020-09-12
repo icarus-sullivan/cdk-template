@@ -3,6 +3,8 @@ const cdk = require('@aws-cdk/core');
 const ec2 = require('@aws-cdk/aws-ec2');
 const ecs = require('@aws-cdk/aws-ecs');
 const ecsPatterns = require('@aws-cdk/aws-ecs-patterns');
+const certificateManager = require('@aws-cdk/aws-certificatemanager');
+const route53 = require('@aws-cdk/aws-route53');
 
 const path = require('path');
 
@@ -14,11 +16,25 @@ const CONFIG = {
 
     dockerDirectory: path.resolve(__dirname, 'docker'),
 
-    alias: {
-        recordName: 'www',
-        domainName: 'domain.here',
+    certificateArn: 'your_arn_here',
+
+    domains: {
+        hostedDomain: 'domain.here',
+        outputDomain: 'subdomain.domain.here', // can be sub or same as hosted
+    },
+
+    env: {
+        region: 'us-east-1',
+        account: 'your_account_id',
     }
 }
+
+const resolveZone = (domainName) => route53.HostedZone.fromLookup(this, 'ez', { 
+    domainName,
+});
+
+const resolveCertificate = (arn) =>
+    certificateManager.Certificate.fromCertificateArn(this, 'ct', arn);
 
 class CdkStack extends cdk.Stack {
     constructor(scope, id, props) {
@@ -26,35 +42,22 @@ class CdkStack extends cdk.Stack {
   
         const vpc = new ec2.Vpc(this, CONFIG.vpcName, { maxAzs: 3 });
         const cluster = new ecs.Cluster(this, CONFIG.clusterName, { vpc });
+
+        const { hostedDomain, outputDomain } = CONFIG.domains;
+        const existingZone = resolveZone(hostedDomain);
+        const certificate = resolveCertificate(CONFIG.certificateArn);
+
         const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, CONFIG.fargateName, {
             cluster,
             taskImageOptions: {
                 image: ecs.ContainerImage.fromAsset(CONFIG.dockerDirectory),
                 containerPort: 3000,
             },
-        });
-
-        // Create hosted zone elsewhere, may need to set up env
-        const { recordName, domainName } = CONFIG.alias;
-        const zone = route53.HostedZone.fromLookup(this, 'expZone', { 
-            domainName 
-        });
-
-        new route53.ARecord(this, 'exprecord', {
-            zone,
-            recordName,
-            target: route53.RecordTarget.fromAlias(new alias.LoadBalancerTarget(fargateService.loadBalancer)),
+            certificate,
+            domainName: outputDomain,
+            domainZone: existingZone,
         });
     }
 }
 
-module.exports = new CdkStack(
-    new cdk.App(),
-    CONFIG.name,
-    {
-        env: {
-            region: 'us-east-1',
-            account: 'your_account_id',
-        }
-    }
-);
+module.exports = new CdkStack(new cdk.App(), CONFIG.name, { env: CONFIG.env });
